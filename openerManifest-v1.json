@@ -1,0 +1,2569 @@
+{
+    "actions": [
+        {
+            "title": "Open Tweet",
+            "regex": "http(?:s)?://(?:mobile\\.|www\\.)?twitter\\.com/(?:@?[a-zA-Z0-9_]{1,15}/status|statuses)/(\\d+).*$",
+            "testInputs": [
+                "https://twitter.com/zpower/status/588561590997352448",
+                "https://mobile.twitter.com/kiebk/status/599159327056863232?cn=cmVwbHk%3D&refsrc=email"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "twitter",
+                    "format": "twitter://status?id=$1",
+                    "testResults": [
+                        "twitter://status?id=588561590997352448",
+                        "twitter://status?id=599159327056863232"
+                    ]
+                },
+                {
+                    "appIdentifier": "tweetbot",
+                    "format": "tweetbot:///status/$1",
+                    "testResults": [
+                        "tweetbot:///status/588561590997352448",
+                        "tweetbot:///status/599159327056863232"
+                    ]
+                },
+                {
+                    "appIdentifier": "twitterrific",
+                    "format": "twitterrific:///tweet?id=$1",
+                    "testResults": [
+                        "twitterrific:///tweet?id=588561590997352448",
+                        "twitterrific:///tweet?id=599159327056863232"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s?)://(?:mobile\\.|www\\.)?twitter\\.com/(?:@)?([a-zA-Z0-9_]{1,15})(?:/with_replies)?(?:/?)$",
+            "testInputs": [
+                "https://mobile.twitter.com/chillmage/with_replies",
+                "https://twitter.com/hashtag/ThingsILearnedFromTheLeft?src=hash",
+                "https://mobile.twitter.com/kiebk/status/599159327056863232"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "twitter",
+                    "format": "twitter://user?screen_name=$1",
+                    "testResults": [
+                        "twitter://user?screen_name=chillmage",
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "appIdentifier": "tweetbot",
+                    "format": "tweetbot:///user_profile/$1",
+                    "testResults": [
+                        "tweetbot:///user_profile/chillmage",
+                        null,
+                        null
+                    ]
+                },
+                {
+                    "appIdentifier": "twitterrific",
+                    "format": "twitterrific:///profile?screen_name=$1",
+                    "testResults": [
+                        "twitterrific:///profile?screen_name=chillmage",
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s?)://(?:mobile\\.|www\\.)?twitter.com/intent/user\\?.*screen_name=?(?:@)?([a-zA-Z0-9_]{1,15}).*$",
+            "testInputs": [
+                "https://twitter.com/intent/user?screen_name=addyosmani"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "twitter",
+                    "format": "twitter://user?screen_name=$1",
+                    "testResults": [
+                        "twitter://user?screen_name=addyosmani"
+                    ]
+                },
+                {
+                    "appIdentifier": "tweetbot",
+                    "format": "tweetbot:///user_profile/$1",
+                    "testResults": [
+                        "tweetbot:///user_profile/addyosmani"
+                    ]
+                },
+                {
+                    "appIdentifier": "twitterrific",
+                    "format": "twitterrific:///profile?screen_name=$1",
+                    "testResults": [
+                        "twitterrific:///profile?screen_name=addyosmani"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Hashtag",
+            "regex": "http(?:s?)://(?:mobile.|www.)?twitter.com/hashtag/([a-zA-Z0-9_]+).*$",
+            "testInputs": [
+                "https://mobile.twitter.com/chillmage/with_replies",
+                "https://twitter.com/hashtag/ThingsILearnedFromTheLeft?src=hash"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "twitter",
+                    "format": "twitter://search?query=%23$1",
+                    "testResults": [
+                        null,
+                        "twitter://search?query=%23ThingsILearnedFromTheLeft"
+                    ]
+                },
+                {
+                    "appIdentifier": "tweetbot",
+                    "format": "tweetbot:///search?query=%23$1",
+                    "testResults": [
+                        null,
+                        "tweetbot:///search?query=%23ThingsILearnedFromTheLeft"
+                    ]
+                },
+                {
+                    "appIdentifier": "twitterrific",
+                    "format": "twitterrific:///search?q=%23$1",
+                    "testResults": [
+                        null,
+                        "twitterrific:///search?q=%23ThingsILearnedFromTheLeft"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Post",
+            "regex": "(?:(?:http(?:s?)://(?:www.)?(?:(?:instagram.com)|(?:instagr.am))/p/))([a-zA-Z0-9_\\-\\.]+)(?:/?)$",
+            "testInputs": [
+                "https://instagram.com/p/1t0zhgmQf7/",
+                "https://instagram.com/p/1t0oDmGQfp/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "instagram",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); url = 'http://api.instagram.com/oembed?url=' + url; xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4) { if (xmlhttp.status == 200) { var res = JSON.parse(xmlhttp.responseText); completionHandler('instagram://media?id=' + res['media_id']); } else { completionHandler(null); } } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "instagram://media?id=967661734046795771_263571600",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "(?:(?:http(?:s?)://(?:www.)?(?:(?:instagram.com)|(?:instagr.am))/))([a-zA-Z0-9_\\.]{1,30})(?:/?)$",
+            "formats": [
+                {
+                    "appIdentifier": "instagram",
+                    "format": "instagram://user?username=$1"
+                }
+            ]
+        },
+        {
+            "title": "Open Tag",
+            "regex": "(?:(?:http(?:s?)://(?:www.)?(?:(?:instagram.com)|(?:instagr.am))/))explore/tags/([a-zA-Z0-9_%]+).*$",
+            "testInputs": [
+                "https://instagram.com/explore/tags/darkroomapp/",
+                "https://instagram.com/explore/tags/%F0%9F%98%80/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "instagram",
+                    "format": "instagram://tag?name=$1",
+                    "testResults": [
+                        "instagram://tag?name=darkroomapp",
+                        "instagram://tag?name=%F0%9F%98%80"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open App",
+            "regex": "http(?:s)?://apps\\.getpebble\\.com/(?:\\w+/)*application(?:s)?/([:hex:]+)",
+            "testInputs": [
+                "https://apps.getpebble.com/en_US/application/555c5ce445377a3938000095",
+                "https://apps.getpebble.com/applications/52d66b10333d76e3d0000001"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "pebbletime",
+                    "format": "pebble-3://appstore/$1",
+                    "testResults": [
+                        "pebble-3://appstore/555c5ce445377a3938000095",
+                        "pebble-3://appstore/52d66b10333d76e3d0000001"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Photo",
+            "regex": "http(?:s?)://(?:www.)?500px.com/photo/(\\d+)(?:(?:/|\\?).*)?$",
+            "testInputs": [
+                "https://500px.com/timonus",
+                "https://500px.com/photo/106606873/wood-anemone-by-fredrik-m%C3%B6rk",
+                "http://500px.com/photo/108545375"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "500px",
+                    "format": "px://500px.com/photo/$1",
+                    "testResults": [
+                        null,
+                        "px://500px.com/photo/106606873",
+                        "px://500px.com/photo/108545375"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s?)://(?:www.)?500px.com/(?!photo)([0-9a-zA-Z_-]+)(?:/|\\?)?.*$",
+            "testInputs": [
+                "https://500px.com/timonus",
+                "https://500px.com/photo/40145312/7-7-13-by-tim-johnsen?from=user_library"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "500px",
+                    "format": "px://500px.com/$1",
+                    "testResults": [
+                        "px://500px.com/timonus",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Photo",
+            "regex": "http(?:s)?://(?:m.|mobile.|www.)?flickr.com(?:/#|/browser/upgrade/\\?continue=)?/photos/([0-9a-zA-Z_@%-]+)/(\\d+)(?:(?:/|\\?).*)?$",
+            "testInputs": [
+                "https://m.flickr.com/#/photos/27933390@N03/16929283568/",
+                "https://www.flickr.com/photos/27933390@N03/16929283568/",
+                "https://m.flickr.com/#/photos/27933390@N03/sets/72157651034989505/",
+                "https://www.flickr.com/photos/nikosaliagas/17076600439/",
+                "https://m.flickr.com/#/photos/nikosaliagas/17076600439/",
+                "https://www.flickr.com/browser/upgrade/?continue=/photos/sandra18e2010/17088623459/"
+            ],
+            "todo": "Improve performance of short URLs be decoding flic.kr/p/ base58 codes https://www.flickr.com/services/api/misc.urls.html#short",
+            "formats": [
+                {
+                    "appIdentifier": "flickr",
+                    "format": "flickr://photos/$1/$2",
+                    "testResults": [
+                        "flickr://photos/27933390@N03/16929283568",
+                        "flickr://photos/27933390@N03/16929283568",
+                        null,
+                        "flickr://photos/nikosaliagas/17076600439",
+                        "flickr://photos/nikosaliagas/17076600439",
+                        "flickr://photos/sandra18e2010/17088623459"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s)?://(?:m.|mobile.|www.)?flickr.com(?:/#|/browser/upgrade/\\?continue=)?/(?:photos|people)/([0-9a-zA-Z_@%-]+)(?:/|\\?|/\\?.*)$",
+            "testInputs": [
+                "https://m.flickr.com/#/photos/27933390@N03/",
+                "https://www.flickr.com/people/27933390@N03/",
+                "https://m.flickr.com/#/photos/27933390@N03/16929283568/",
+                "https://www.flickr.com/photos/27933390@N03/16929283568/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "flickr",
+                    "format": "flickr://flickr.com/photos/$1",
+                    "testResults": [
+                        "flickr://flickr.com/photos/27933390@N03",
+                        "flickr://flickr.com/photos/27933390@N03",
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Photoset",
+            "regex": "http(?:s)?://(?:m.|mobile.|www.)?flickr.com(?:/#|/browser/upgrade/\\?continue=)?/photos/([0-9a-zA-Z_@%-]+)/sets/(\\d+)(?:(?:/|\\?).*)?$",
+            "testInputs": [
+                "https://m.flickr.com/#/photos/27933390@N03/sets/72157651034989505/",
+                "https://m.flickr.com/#/photos/27933390@N03/16929283568/",
+                "https://www.flickr.com/photos/27933390@N03/16929283568/",
+                "https://flickr.com/photos/132073082@N06/sets/72157652589484615"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "flickr",
+                    "format": "flickr://photos/$1/sets/$2",
+                    "testResults": [
+                        "flickr://photos/27933390@N03/sets/72157651034989505",
+                        null,
+                        null,
+                        "flickr://photos/132073082@N06/sets/72157652589484615"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Group",
+            "regex": "http(?:s)?://(?:m.|mobile.|www.)?flickr.com(?:/#|/browser/upgrade/\\?continue=)?/groups/([0-9a-zA-Z_@%-]+).*$",
+            "testInputs": [
+                "https://www.flickr.com/groups/lifehacker-workspace-showandtell/pool/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "flickr",
+                    "format": "flickr://groups/$1",
+                    "testResults": [
+                        "flickr://groups/lifehacker-workspace-showandtell"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Tumblog",
+            "regex": "http(?:s?)://([a-zA-Z0-9_\\-]+).tumblr.com(?:/(?!(post|image|tagged)/).*|\\?.*|#.*)?$",
+            "testInputs": [
+                "http://visualizingmath.tumblr.com/",
+                "http://instagram-engineering.tumblr.com",
+                "http://danielwellingtonwatches.tumblr.com?ref=blahblahblah",
+                "http://rickwebb.tumblr.com/post/556400952/the-never-call-there-are-some-people-who-love-to",
+                "http://2kindsofpeople.tumblr.com/tagged/003"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "tumblr",
+                    "format": "tumblr://x-callback-url/blog?blogName=$1",
+                    "testResults": [
+                        "tumblr://x-callback-url/blog?blogName=visualizingmath",
+                        "tumblr://x-callback-url/blog?blogName=instagram-engineering",
+                        "tumblr://x-callback-url/blog?blogName=danielwellingtonwatches",
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Tumblog",
+            "includeHeaders": true,
+            "regex": "http://(?!.*\\.tumblr\\.com)[a-zA-Z0-9-\\.]+/(?!post|image|tagged).*\\n.*\"(?:(?i)X-Tumblr-User)\":\"([a-zA-Z0-9_\\-]+)\",.*$",
+            "formats": [
+                {
+                    "appIdentifier": "tumblr",
+                    "format": "tumblr://x-callback-url/blog?blogName=$1"
+                }
+            ]
+        },
+        {
+            "title": "Open Post",
+            "regex": "http(?:s?)://([a-zA-Z0-9_\\-]+).tumblr.com/(?!tagged)\\w+/(\\d+)(?:(?:/|\\?|#).*)?$",
+            "testInputs": [
+                "http://visualizingmath.tumblr.com/post/98266724851/hyrodium-the-curvature-of-curves-x-x",
+                "http://unskoolery.tumblr.com/post/90849039693/beesandbombs-stars-squares",
+                "http://unskoolery.tumblr.com/post/89946808518/spring-of-mathematics-spiroface-4-rolling",
+                "http://danielwellingtonwatches.tumblr.com/image/116512634509",
+                "http://danielwellingtonwatches.tumblr.com/post/116512634509/accessorizing-done-right",
+                "http://sknogis.tumblr.com/post/116915684039/8-great-google-maps-tips-for-android-and-ios#_=_",
+                "http://instagram-engineering.tumblr.com/post/117889701472/emojineering-part-1-machine-learning-for-emoji",
+                "http://rickwebb.tumblr.com/post/556400952/the-never-call-there-are-some-people-who-love-to",
+                "http://visualizingmath.tumblr.com/",
+                "http://zenchronicles.tumblr.com/post/119420987354",
+                "http://zenchronicles.tumblr.com/post/119442343829#_=_",
+                "http://2kindsofpeople.tumblr.com/tagged/003"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "tumblr",
+                    "format": "tumblr://x-callback-url/blog?blogName=$1&postID=$2",
+                    "testResults": [
+                        "tumblr://x-callback-url/blog?blogName=visualizingmath&postID=98266724851",
+                        "tumblr://x-callback-url/blog?blogName=unskoolery&postID=90849039693",
+                        "tumblr://x-callback-url/blog?blogName=unskoolery&postID=89946808518",
+                        "tumblr://x-callback-url/blog?blogName=danielwellingtonwatches&postID=116512634509",
+                        "tumblr://x-callback-url/blog?blogName=danielwellingtonwatches&postID=116512634509",
+                        "tumblr://x-callback-url/blog?blogName=sknogis&postID=116915684039",
+                        "tumblr://x-callback-url/blog?blogName=instagram-engineering&postID=117889701472",
+                        "tumblr://x-callback-url/blog?blogName=rickwebb&postID=556400952",
+                        null,
+                        "tumblr://x-callback-url/blog?blogName=zenchronicles&postID=119420987354",
+                        "tumblr://x-callback-url/blog?blogName=zenchronicles&postID=119442343829",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Post",
+            "regex": "http(?:s?)://([a-zA-Z0-9_\\-]+).tumblr.com/tagged/(\\d+)(?:(?:/|\\?|#).*)?$",
+            "testInputs": [
+                "http://2kindsofpeople.tumblr.com/tagged/003"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "tumblr",
+                    "xformat": "tumblr://x-callback-url/blog?blogName=$1&postID=$2",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*?([a-zA-Z0-9_\\-]+)\\.tumblr\\.com/post/(\\\\d+).*'); var match = regex.exec(res); var blogName = match[1]; var postID = match[2]; completionHandler('tumblr://x-callback-url/blog?blogName=' + blogName + '&postID=' + postID); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "tumblr://x-callback-url/blog?blogName=2kindsofpeople&postID=115652499436"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Post",
+            "regex": "http://(?!.*\\.tumblr\\.com)[a-zA-Z0-9-.]+/(?!tagged)\\w+/(\\d+).*\\n.*\"(?:(?i)X-Tumblr-User)\":\"([a-zA-Z0-9_\\-]+)\",.*$",
+            "includeHeaders": true,
+            "formats": [
+                {
+                    "appIdentifier": "tumblr",
+                    "format": "tumblr://x-callback-url/blog?blogName=$2&postID=$1"
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(s?)://(www.?)storehouse.co/(?!stories).+$",
+            "testInputs": [
+                "https://www.storehouse.co/timonus"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "storehouse",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(storehouse://view/user/\\\\d+).*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "storehouse://view/user/9012"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Story",
+            "regex": "http(s?)://(www.?)storehouse.co/stories/.+$",
+            "testInputs": [
+                "https://www.storehouse.co/stories/41ir-sf-family-visit-2-14"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "storehouse",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(storehouse://view/story/\\\\d+).*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "storehouse://view/story/21891"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Moment",
+            "regex": "http(?:s?)://(?:www\\.)?path.com/(?:p|moment)/.*$",
+            "formats": [
+                {
+                    "appIdentifier": "path",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(path://moments/[a-f0-9]+).*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }"
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "(?:http(?:s?)://(?:www.)?pinterest.com/)([a-zA-Z0-9-_]+)(?:/?)$",
+            "testInputs": [
+                "https://www.pinterest.com/cnnr/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "pinterest",
+                    "format": "pinterest://user/$1",
+                    "testResults": [
+                        "pinterest://user/cnnr"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Board",
+            "regex": "(?:http(?:s?)://(?:www.|m.)?pinterest.com/)(?!pin)([a-zA-Z0-9-_]+)(?:/)([a-zA-Z0-9-_]+)(?:/?)$",
+            "testInputs": [
+                "https://www.pinterest.com/cnnr/what-time-is-it/",
+                "https://www.pinterest.com/pin/515380751084154703/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "pinterest",
+                    "format": "pinterest://board/$1/$2",
+                    "testResults": [
+                        "pinterest://board/cnnr/what-time-is-it",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Pin",
+            "regex": "(?:http(?:s?)://(?:www.|m.)?pinterest.com/pin/)([:alnum:]+)(?:/?)$",
+            "testInputs": [
+                "https://www.pinterest.com/pin/515380751084154703/",
+                "https://www.pinterest.com/pin/A2xVdQAQgF0BNTgV0RsAAAA/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "pinterest",
+                    "format": "pinterest://pin/$1",
+                    "testResults": [
+                        "pinterest://pin/515380751084154703",
+                        "pinterest://pin/A2xVdQAQgF0BNTgV0RsAAAA"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Topic",
+            "regex": "http(?:s)?://(?:www\\.)?flipboard\\.com/topic/.*$",
+            "testInputs": [
+                "https://flipboard.com/topic/independenceday"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "flipboard",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(flipboard:\/\/.*?)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "flipboard://showSection/flipboard/topic%252Findependenceday?title=July%204th%20on%20Flipboard"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Section",
+            "regex": "http(?:s)?://(?:www\\.)?flipboard\\.com/@\\w+(?:/\\w*(-\\w*)+)?.*$",
+            "testInputs": [
+                "https://flipboard.com/@catherinesc63kn",
+                "https://flipboard.com/@catherinesc63kn/liverpool-post-5ha7nr15y"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "flipboard",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(flipboard:\/\/.*?)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "flipboard://showSection/flipboard/user%252F230604372?title=Catherine%20Scowcroft%20on%20Flipboard",
+                        "flipboard://showSection/sid/5ha7nr15y/catherinesc63kn?title=Liverpool%20Post%20on%20Flipboard"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s)?://weibo\\.(?:com|cn)/(?:u/)?(\\d+)(?:/\\?.*|/)?$",
+            "testInputs": [
+                "http://weibo.com/2616423197",
+                "http://weibo.com/u/2616423197",
+                "http://weibo.com/2616423197/Cmjs2vh5Q?from=page_1005052616423197_profile&wvr=6&mod=weibotime"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "weibo",
+                    "format": "sinaweibo://userinfo?uid=$1",
+                    "testResults": [
+                        "sinaweibo://userinfo?uid=2616423197",
+                        "sinaweibo://userinfo?uid=2616423197",
+                        null
+                    ]
+                },
+                {
+                    "appIdentifier": "moke",
+                    "format": "moke:///user?id=$1",
+                    "testResults": [
+                        "moke:///user?id=2616423197",
+                        "moke:///user?id=2616423197",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Status",
+            "regex": "http(?:s)?://weibo\\.(?:com|cn)/\\d+/(\\w+).*$",
+            "testInputs": [
+                "http://weibo.com/2616423197/Cmjs2vh5Q?from=page_1005052616423197_profile&wvr=6&mod=weibotime"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "weibo",
+                    "format": "sinaweibo://detail?mblogid=$1",
+                    "testResults": [
+                        "sinaweibo://detail?mblogid=Cmjs2vh5Q"
+                    ]
+                },
+                {
+                    "appIdentifier": "moke",
+                    "format": "moke:///status?mid=$1",
+                    "testResults": [
+                        "moke:///status?mid=Cmjs2vh5Q"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Venue",
+            "regex": "(?:http(?:s?)://(?:m.|www.|mobile.)?foursquare.com(?:/mobile)?/v(?:/\\S+)?/([0-9a-fA-F]{24}))(?:/?)$",
+            "testInputs": [
+                "https://foursquare.com/v/ritual-coffee-roasters/42853f80f964a5200c231fe3",
+                "https://foursquare.com/v/42853f80f964a5200c231fe3"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "foursquare",
+                    "format": "foursquare://venues/$1",
+                    "testResults": [
+                        "foursquare://venues/42853f80f964a5200c231fe3",
+                        "foursquare://venues/42853f80f964a5200c231fe3"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Tip",
+            "regex": "(?:http(?:s?)://(?:m.|www.|mobile.)?foursquare.com(?:/mobile)?/item/([0-9a-fA-F]{24}))(?:/?)$",
+            "testInputs": [
+                "https://foursquare.com/item/552b6f5f498e0073829b16b1"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "foursquare",
+                    "format": "foursquare://tips/$1",
+                    "testResults": [
+                        "foursquare://tips/552b6f5f498e0073829b16b1"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "(?:http(?:s?)://(?:m.|www.|mobile.)?foursquare.com(?:/mobile)?/u/(\\d+))(?:/?)$",
+            "testInputs": [
+                "http://foursquare.com/u/558158"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "foursquare",
+                    "format": "foursquare://users/$1",
+                    "testResults": [
+                        "foursquare://users/558158"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Check-in",
+            "regex": "(?:http(?:s?)://(?:www.?)swarmapp.com(?:/\\w+)?/checkin/)([a-fA-F0-9]+\\?s=[a-zA-Z0-9_-]+)(?:.*)$",
+            "testInputs": [
+                "https://www.swarmapp.com/checkin/5500f9a8498efebcbce3b88e?s=7mh4SF_b0MM2qFM3aJEzQpu-SDo&ref=tw",
+                "https://www.swarmapp.com/timonus/checkin/5500f9a8498efebcbce3b88e?s=7mh4SF_b0MM2qFM3aJEzQpu-SDo&ref=tw",
+                "https://www.swarmapp.com/c/cnwYJbPfuAd"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "swarm",
+                    "format": "swarm://checkins/$1",
+                    "testResults": [
+                        "swarm://checkins/5500f9a8498efebcbce3b88e?s=7mh4SF_b0MM2qFM3aJEzQpu-SDo",
+                        "swarm://checkins/5500f9a8498efebcbce3b88e?s=7mh4SF_b0MM2qFM3aJEzQpu-SDo",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Check-in",
+            "regex": "(?:http(?:s?)://(?:www.?)swarmapp.com/c/)([a-zA-Z0-9_-]+)(?:.*)$",
+            "testInputs": [
+                "https://www.swarmapp.com/c/cnwYJbPfuAd"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "swarm",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(swarm:\/\/.*?)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "swarm://checkins/54dc6e7d498e6f759fed73ad?s=9Mrny6Nrgw8DeC5kn1m79HuAx_E"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Listing",
+            "regex": "http(?:s)?://(?:www\\.|m\\.)airbnb(?:\\.\\w+)+/(?:rooms|listings)/(\\d+).*$",
+            "testInputs": [
+                "https://m.airbnb.com/listings/3342418",
+                "https://www.airbnb.com/rooms/3342418",
+                "https://www.airbnb.fr/rooms/5224117"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "airbnb",
+                    "format": "airbnb://rooms/$1",
+                    "testResults": [
+                        "airbnb://rooms/3342418",
+                        "airbnb://rooms/3342418",
+                        "airbnb://rooms/5224117"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Business",
+            "regex": "http(?:s?)://(?:www\\.|mobile\\.|m\\.)?yelp(?:\\.[a-z]+)+/biz/([a-zA-Z0-9%\\-]+).*$",
+            "testInputs": [
+                "http://www.yelp.com/biz/sinh-sinh-restaurant-houston?pt=check_in&ref=twitter&v=4b",
+                "http://www.yelp.co.jp/biz/%E3%81%9F%E3%81%BE%E3%83%97%E3%83%A9%E3%83%BC%E3%82%B6%E3%83%86%E3%83%A9%E3%82%B9-%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C%E6%A8%AA%E6%B5%9C%E5%B8%82",
+                "http://www.yelp.ca/biz/104-sushi-and-co-surrey?hrid=YGeO5KIST5a0VuAZj8YNLg&pt=check_in&ref=twitter&v=4b"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "yelp",
+                    "format": "yelp:///biz/$1",
+                    "testResults": [
+                        "yelp:///biz/sinh-sinh-restaurant-houston",
+                        "yelp:///biz/%E3%81%9F%E3%81%BE%E3%83%97%E3%83%A9%E3%83%BC%E3%82%B6%E3%83%86%E3%83%A9%E3%82%B9-%E7%A5%9E%E5%A5%88%E5%B7%9D%E7%9C%8C%E6%A8%AA%E6%B5%9C%E5%B8%82",
+                        "yelp:///biz/104-sushi-and-co-surrey"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Business Photos",
+            "regex": "http(?:s?)://(?:www\\.|mobile\\.|m\\.)?yelp(?:\\.[a-z]+)+/biz_photos/([a-zA-Z0-9%\\-]+).*$",
+            "testInputs": [
+                "http://www.yelp.com/biz_photos/service-max-cleaning-and-restoration-miami-3"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "yelp",
+                    "format": "yelp:///biz/photos?biz_id=$1",
+                    "testResults": [
+                        "yelp:///biz/photos?biz_id=service-max-cleaning-and-restoration-miami-3"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "http(?:s)?://((maps\\.google(?:\\.\\w+)+/.*)|((?:www\\.)?google(?:\\.\\w+)+/maps/.*))$",
+            "testInputs": [
+                "https://www.google.com/maps/place/Anchor+Brewing+Company/@37.7632216,-122.4009458,15z/data=!4m2!3m1!1s0x0:0x976aee276c5079b2?sa=X&ei=q1qQVaLFN8WqogSI6bsw&ved=0CM4BEPwSMBc",
+                "https://maps.google.com/?q=@37.3161,-122.1836",
+                "http://maps.google.co.jp/maps?f=q&hl=ja&geocode=&q=-39.23774,175.3048&ie=UTF8&ll=-39.23774,175.3048&z=6"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "googlemaps",
+                    "format": "comgooglemapsurl://$1",
+                    "testResults": [
+                        "comgooglemapsurl://www.google.com/maps/place/Anchor+Brewing+Company/@37.7632216,-122.4009458,15z/data=!4m2!3m1!1s0x0:0x976aee276c5079b2?sa=X&ei=q1qQVaLFN8WqogSI6bsw&ved=0CM4BEPwSMBc",
+                        "comgooglemapsurl://maps.google.com/?q=@37.3161,-122.1836",
+                        "comgooglemapsurl://maps.google.co.jp/maps?f=q&hl=ja&geocode=&q=-39.23774,175.3048&ie=UTF8&ll=-39.23774,175.3048&z=6"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Video",
+            "notes": "This isn't perfect, doesn't handle id's in path being at end, and doesn't capture other query params totally correctly",
+            "regex": "http(?:s)?://(?:www\\.|m\\.)?(?:youtu\\.be/|youtube\\.com/(?:embed/|.*(?:\\?|&)v=))([a-zA-Z0-9_\\-]+).*?((\\?|&)start=\\d+)?.*?$",
+            "testInputs": [
+                "https://m.youtube.com/watch?v=MTY1Kje0yLg",
+                "https://www.youtube.com/embed/0uY7gLZDmn4?start=96",
+                "https://www.youtube.com/watch?v=MFzDaBzBlL0&app=desktop",
+                "https://youtu.be/mzun7_Ynmks",
+                "http://youtu.be/JEiSTzK-A2A"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "youtube",
+                    "format": "youtube://$1$2",
+                    "testResults": [
+                        "youtube://MTY1Kje0yLg",
+                        "youtube://0uY7gLZDmn4?start=96",
+                        "youtube://MFzDaBzBlL0",
+                        "youtube://mzun7_Ynmks",
+                        "youtube://JEiSTzK-A2A"
+                    ]
+                },
+                {
+                    "appIdentifier": "protube",
+                    "format": "protube://video/$1",
+                    "testResults": [
+                        "protube://video/MTY1Kje0yLg",
+                        "protube://video/0uY7gLZDmn4",
+                        "protube://video/MFzDaBzBlL0",
+                        "protube://video/mzun7_Ynmks",
+                        "protube://video/JEiSTzK-A2A"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "(?:http(?:s?)://)((?:www.|m.)?youtube.com/user/([\\w]+).*)",
+            "testInputs": [
+                "https://www.youtube.com/user/timonominus"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "youtube",
+                    "format": "youtube://$1",
+                    "testResults": [
+                        "youtube://www.youtube.com/user/timonominus"
+                    ]
+                },
+                {
+                    "appIdentifier": "protube",
+                    "format": "protube://user/$2",
+                    "testResults": [
+                        "protube://user/timonominus"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Video",
+            "regex": "(http(s?)://(www.)?vine.co/v/[0-9a-zA-Z]+(/?))$",
+            "formats": [
+                {
+                    "appIdentifier": "vine",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('<meta property=\"twitter:app:url:iphone\" content=\"(.*)\">'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }"
+                }
+            ]
+        },
+        {
+            "title": "Open Broadcast",
+            "regex": "http(?:s?)://(?:www\\.)?periscope.tv/w/.*$",
+            "formats": [
+                {
+                    "appIdentifier": "periscope",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(pscp://broadcast/\\\\d+).*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }"
+                }
+            ]
+        },
+        {
+            "title": "Open Stream",
+            "regex": "http(?:s)?://(?:[a-zA-Z0-9_\\-]+\\.)*twitch\\.tv/(?!directory)(\\w+)(?!.*/v/\\d+).*$",
+            "testInputs": [
+                "http://www.twitch.tv/imaginedragons",
+                "http://es-es.twitch.tv/doctorepollo/",
+                "http://www.twitch.tv/fragbitelive/v/4776592",
+                "http://www.twitch.tv/directory/game/Minecraft"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "twitch",
+                    "format": "twitch://stream/$1",
+                    "testResults": [
+                        "twitch://stream/imaginedragons",
+                        "twitch://stream/doctorepollo",
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Game Directory",
+            "regex": "http(?:s)?://(?:[a-zA-Z0-9_\\-]+\\.)*twitch\\.tv/directory/game/([a-zA-Z0-9_\\-%]+).*$",
+            "testInputs": [
+                "http://www.twitch.tv/directory/game/Minecraft"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "twitch",
+                    "format": "twitch://game/$1",
+                    "testResults": [
+                        "twitch://game/Minecraft"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Video",
+            "regex": "http(?:s)?://(?:[a-zA-Z0-9_\\-]+\\.)*twitch\\.tv/(?!directory)(?:\\w+)/v/(\\d+).*$",
+            "testInputs": [
+                "http://www.twitch.tv/fragbitelive/v/4776592"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "twitch",
+                    "format": "twitch://video/v$1",
+                    "testResults": [
+                        "twitch://video/v4776592"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Post",
+            "regex": "http(?:s)?://(?:www\\.)?flipagram\\.com/f/(\\w+).*$",
+            "testInputs": [
+                "http://flipagram.com/f/V5uj3BU9CR"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "flipagram",
+                    "format": "flipagram://flipagram/$1",
+                    "testResults": [
+                        "flipagram://flipagram/V5uj3BU9CR"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Stream",
+            "regex": "http(?:s?)://meerkatapp.co/[a-zA-Z0-9_-]+/((\\w+-)+\\w+).*$",
+            "testInputs": [
+                "http://meerkatapp.co/bad_beef/21513832-acdc-456d-b28b-7f55925ef99a?utm_source=twitter",
+                "http://meerkatapp.co/rrhoover/sch-44ab01ef-dfcd-4354-99c8-68b3e4abc537?utm_source=twitter"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "meerkat",
+                    "format": "meerkat://live/$1",
+                    "testResults": [
+                        "meerkat://live/21513832-acdc-456d-b28b-7f55925ef99a",
+                        "meerkat://live/sch-44ab01ef-dfcd-4354-99c8-68b3e4abc537"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open File",
+            "regex": "http(?:s?)://(?:www\\.)?dropbox\\.com/s/\\w+.*$",
+            "testInputs": [
+                "https://www.dropbox.com/s/i2iy9bgprh52k4c/1435444012.108938.jpg?dl=0"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "dropbox",
+                    "script": "function process(url, completionHandler) { completionHandler('dbapi-6:/1/viewLink?url=' + encodeURIComponent(url)); }",
+                    "testResults": [
+                        "dbapi-6:/1/viewLink?url=https%3A%2F%2Fwww.dropbox.com%2Fs%2Fi2iy9bgprh52k4c%2F1435444012.108938.jpg%3Fdl%3D0"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Folder",
+            "regex": "http(?:s?)://(?:www\\.)?dropbox\\.com/sh/\\w+.*$",
+            "testInputs": [
+                "https://www.dropbox.com/sh/a7sn3ichcezsw43/AACFYITTfhjek2w7LITs4Slma?dl=0"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "dropbox",
+                    "script": "function process(url, completionHandler) { completionHandler('dbapi-6:/1/viewLink?url=' + encodeURIComponent(url)); }",
+                    "testResults": [
+                        "dbapi-6:/1/viewLink?url=https%3A%2F%2Fwww.dropbox.com%2Fsh%2Fa7sn3ichcezsw43%2FAACFYITTfhjek2w7LITs4Slma%3Fdl%3D0"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "(http(?:s?)://drive\\.google\\.com/(?:open|file|folder).*)$",
+            "testInputs": [
+                "https://drive.google.com/open?id=1W64thRDqmKiDwsuK_j1IkxnCVeBfs7wwSXBbLxnsitL_D9-qAt4",
+                "https://drive.google.com/file/d/1W64thRDqmKiDwsuK_j1IkxnCVeBfs7wwSXBbLxnsitL_D9-qAt4/view",
+                "https://drive.google.com/folderview?id=0B6ru5l1lH3_7bVIwN1RBaVpETDg&usp=sharing"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "googledrive",
+                    "format": "googledrive://$1",
+                    "testResults": [
+                        "googledrive://https://drive.google.com/open?id=1W64thRDqmKiDwsuK_j1IkxnCVeBfs7wwSXBbLxnsitL_D9-qAt4",
+                        "googledrive://https://drive.google.com/file/d/1W64thRDqmKiDwsuK_j1IkxnCVeBfs7wwSXBbLxnsitL_D9-qAt4/view",
+                        "googledrive://https://drive.google.com/folderview?id=0B6ru5l1lH3_7bVIwN1RBaVpETDg&usp=sharing"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "http(?:s)?://m\\.box\\.com/shared_item/(.*)$",
+            "testInputs": [
+                "https://m.box.com/shared_item/https%3A%2F%2Fapp.box.com%2Fs%2Fawrlik8v6w83ugx7q2swmekfw3irm28l"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "box",
+                    "format": "boxopenshared://shared_item?url=$1",
+                    "testResults": [
+                        "boxopenshared://shared_item?url=https%3A%2F%2Fapp.box.com%2Fs%2Fawrlik8v6w83ugx7q2swmekfw3irm28l"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "http(?:s)?://(?:app\\.)?box\\.com/s/(\\w+).*$",
+            "testInputs": [
+                "https://app.box.com/s/awrlik8v6w83ugx7q2swmekfw3irm28l",
+                "https://app.box.com/s/20bj5ye64j9dlqdnkrig"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "box",
+                    "format": "boxopenshared://shared_item?url=https%3A%2F%2Fapp.box.com%2Fs%2F$1",
+                    "testResults": [
+                        "boxopenshared://shared_item?url=https%3A%2F%2Fapp.box.com%2Fs%2Fawrlik8v6w83ugx7q2swmekfw3irm28l",
+                        "boxopenshared://shared_item?url=https%3A%2F%2Fapp.box.com%2Fs%2F20bj5ye64j9dlqdnkrig"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "(?:http(s?)://vimeo.com/([a-zA-Z])(\\w+))(?:/?)$",
+            "testInputs": [
+                "http://vimeo.com/timonus"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "vimeo",
+                    "docs": "https://developer.vimeo.com/apis/simple",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); var regex = /(?:http(?:s)?:\\/\\/vimeo.com\\/([a-zA-Z])(\\w+))(?:\\/?)$/; var match = regex.exec(url); var name = match[1] + match[2]; url = 'https://vimeo.com/api/v2/' + name + '/info.json'; xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = JSON.parse(xmlhttp.responseText); completionHandler('vimeo://app.vimeo.com/users/' + res['id']); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "vimeo://app.vimeo.com/users/4373647"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Video",
+            "regex": "(http(s?)://vimeo.com/(\\d+))(/?)(.*)$",
+            "testInputs": [
+                "https://vimeo.com/121634963",
+                "https://vimeo.com/125074876?ref=tw-share"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "vimeo",
+                    "docs": "https://github.com/vimeo/VIMDeeplink",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); url = 'https://vimeo.com/api/oembed.json?url=' + encodeURIComponent(url); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = JSON.parse(xmlhttp.responseText); completionHandler('vimeo://app.vimeo.com' + res['uri']); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "vimeo://app.vimeo.com/videos/121634963",
+                        "vimeo://app.vimeo.com/videos/125074876"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Video",
+            "regex": "http(?:s)?://(?:www\\.)?hulu(?:\\.\\w+)+/watch/(\\d+).*$",
+            "testInputs": [
+                "http://www.hulu.com/watch/804690?linkId=14918334",
+                "http://www.hulu.com/watch/143935"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "hulu",
+                    "format": "hulu://w/$1",
+                    "testResults": [
+                        "hulu://w/804690",
+                        "hulu://w/143935"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Video",
+            "regex": "http(?:s)?://(?:www\\.)vevo\\.com/watch/(?:[a-zA-Z0-9()\\-_%]+/)*(\\w+).*$",
+            "testInputs": [
+                "http://www.vevo.com/watch/US3841500108?syndicationid=bb8a16ab-1279-4f17-969b-1dba5eb60eda&shortlink=HzreN8&country=US",
+                "http://www.vevo.com/watch/katy-perry/roar-(official)/USUV71301934"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "vevo",
+                    "format": "vevo://video/$1",
+                    "testResults": [
+                        "vevo://video/US3841500108",
+                        "vevo://video/USUV71301934"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "(?:http(?:s?)://)(((rd.io/x)|((www.?)rdio.com/artist))/(\\w)+)",
+            "testInputs": [
+                "http://rd.io/x/QVTZKjdcmUZN/",
+                "http://www.rdio.com/artist/Beck/album/Guero/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "rdio",
+                    "format": "rdio://$1",
+                    "testResults": [
+                        "rdio://rd.io/x/QVTZKjdcmUZN/",
+                        "rdio://www.rdio.com/artist/Beck/album/Guero/"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Track",
+            "regex": "(?:http(?:s?)://(?:play.|open.|www.)?spotify.com/track/)([:alnum:]+).*$",
+            "testInputs": [
+                "http://open.spotify.com/track/5QZJAcP4nu3xL2NQV4AVHO",
+                "https://play.spotify.com/track/77Ezu3tBE7gmzQ4mRnZZUf?play=true"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "spotify",
+                    "format": "spotify://track:$1",
+                    "testResults": [
+                        "spotify://track:5QZJAcP4nu3xL2NQV4AVHO",
+                        "spotify://track:77Ezu3tBE7gmzQ4mRnZZUf"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Album",
+            "regex": "(?:http(?:s?)://(?:play.|open.|www.)?spotify.com/album/)([:alnum:]+).*$",
+            "testInputs": [
+                "http://open.spotify.com/album/6BK3muExDOuk0VnyMn9NVw"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "spotify",
+                    "format": "spotify://album:$1",
+                    "testResults": [
+                        "spotify://album:6BK3muExDOuk0VnyMn9NVw"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Playlist",
+            "regex": "(?:http(?:s?)://(?:play.|open.|www.)?spotify.com/user/(\\w+)/playlist/)([:alnum:]+).*$",
+            "testInputs": [
+               "https://open.spotify.com/user/naveenium/playlist/1zw42kQZUSZlHyVVn8AecH?utm_content=buffer30eb8&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer",
+               "http://open.spotify.com/user/timonominus/playlist/7rdUGYrNIMEdL6xdJDlMzZ"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "spotify",
+                    "format": "spotify://user/$1/playlist/$2",
+                    "testResults": [
+                        "spotify://user/naveenium/playlist/1zw42kQZUSZlHyVVn8AecH",
+                        "spotify://user/timonominus/playlist/7rdUGYrNIMEdL6xdJDlMzZ"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Artist",
+            "regex": "(?:http(?:s?)://(?:play.|open.|www.)?spotify.com/artist/(\\w+)).*$",
+            "testInputs": [
+                "https://open.spotify.com/artist/3vbKDsSS70ZX9D2OcvbZmS?ref=wp"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "spotify",
+                    "format": "spotify://artist/$1",
+                    "testResults": [
+                        "spotify://artist/3vbKDsSS70ZX9D2OcvbZmS"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Album",
+            "regex": "http(?:s)?://(?:\\w+\\.)*beatsmusic.com/albums/al(?!.*/tracks/.*)(\\d+).*$",
+            "testInputs": [
+                "http://on.beatsmusic.com/albums/al2002685?awesm=beats.mu_h0boO&utm_medium=album&utm_term=al2002685&utm_source=twitter&utm_campaign=&utm_content=",
+"http://on.beatsmusic.com/albums/al16237475/tracks/tr16237477?awesm=beats.mu_f0c5Z&utm_medium=track&utm_term=tr16237477&utm_source=twitter&utm_campaign=&utm_content="
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "beats",
+                    "format": "beatsmusic://listen/albums/al$1",
+                    "testResults": [
+                        "beatsmusic://listen/albums/al2002685",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Track",
+            "regex": "http(?:s)?://(?:\\w+\\.)*beatsmusic.com/albums/al(\\d+)/tracks/tr(\\d+).*$",
+            "testInputs": [            "http://on.beatsmusic.com/albums/al16237475/tracks/tr16237477?awesm=beats.mu_f0c5Z&utm_medium=track&utm_term=tr16237477&utm_source=twitter&utm_campaign=&utm_content="
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "beats",
+                    "format": "beatsmusic://listen/albums/al$1/tracks/tr$2",
+                    "testResults": [
+                        "beatsmusic://listen/albums/al16237475/tracks/tr16237477"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Artist",
+            "regex": "http(?:s)?://(?:\\w+\\.)*beatsmusic.com/artists/ar(\\d+).*$",
+            "testInputs": [            "http://on.beatsmusic.com/artists/ar2918?awesm=beats.mu_h0boN&utm_medium=artist&utm_term=ar2918&utm_source=twitter&utm_campaign=&utm_content="
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "beats",
+                    "format": "beatsmusic://listen/artists/ar$1",
+                    "testResults": [
+                        "beatsmusic://listen/artists/ar2918"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Playlist",
+            "regex": "http(?:s)?://(?:\\w+\\.)*beatsmusic.com/playlists/pl(\\d+).*$",
+            "testInputs": [            "http://on.beatsmusic.com/playlists/pl165446570056089856?awesm=beats.mu_f0c5a&utm_medium=playlist&utm_term=pl165446570056089856&utm_source=twitter&utm_campaign=&utm_content="
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "beats",
+                    "format": "beatsmusic://listen/playlists/pl$1",
+                    "testResults": [
+                        "beatsmusic://listen/playlists/pl165446570056089856"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "(http(s?)://(m.)?soundcloud.com/(\\S+)(/(\\S+))?)",
+            "testInputs": [
+                "http://m.soundcloud.com/ukgoldfilm/tap24-hiha24-1",
+                "https://soundcloud.com/ukgoldfilm",
+                "https://soundcloud.com/ukgoldfilm/sets/uk-gold-soundtrack"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "soundcloud",
+                    "script": "function process(url, completionHandler) { url = 'http://api.soundcloud.com/resolve?client_id=27fcfadd796648a26072b6041ff5bf74&url=' + url; var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var result = JSON.parse(xmlhttp.responseText); var appURL = null; if (result['kind'] === 'track') { appURL = 'soundcloud://sounds:' + result['id']; } else if (result['kind'] === 'user') { appURL = 'soundcloud://users:' + result['id']; } else if (result['kind'] === 'playlist') { appURL = 'soundcloud://sets:' + result['id']; } completionHandler(appURL); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "soundcloud://sounds:192620860",
+                        "soundcloud://users:139227139",
+                        "soundcloud://sets:83870213"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Track",
+            "regex": "http(?:s)?://(?:www\\.)?hypem\\.com/track/([:alnum:]+).*$",
+            "testInputs": [
+                "http://hypem.com/track/28vqc/Empty+Houses+-+Thunderstorms"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "hypemachine",
+                    "format": "hypem://track/$1",
+                    "testResults": [
+                        "hypem://track/28vqc"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s)?://(?:www\\.)?hypem\\.com/(?!track|popular|twitter|tags)(\\w+).*$",
+            "testInputs": [
+                "http://hypem.com/espiegel",
+                "http://hypem.com/track/28vqc/Empty+Houses+-+Thunderstorms",
+                "http://hypem.com/popular/artists"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "hypemachine",
+                    "format": "hypem://playlist/?key=PlaylistFriend&section=users&username=$1",
+                    "testResults": [
+                        "hypem://playlist/?key=PlaylistFriend&section=users&username=espiegel",
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Playlist",
+            "regex": "http(?:s)?://(?:www\\.)?hypem\\.com/(?!track|popular|latest|twitter|tags)(\\w+).*$",
+            "testInputs": [
+                "http://hypem.com/espiegel",
+                "http://hypem.com/track/28vqc/Empty+Houses+-+Thunderstorms",
+                "http://hypem.com/popular/artists"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "hypemachine",
+                    "format": "hypem://playlist/?key=PlaylistFriend&section=users&username=$1",
+                    "testResults": [
+                        "hypem://playlist/?key=PlaylistFriend&section=users&username=espiegel",
+                        null,
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Station",
+            "regex": "http(?:s)?://(?:www\\.)?tunein.com/(?:station(?:/)?\\?StationId=|radio/(?:\\S*-)*s)(\\d+).*$",
+            "testInputs": [
+                "http://tunein.com/radio/Sparkx-Radio-s213837/",
+                "http://tunein.com/radio/Go-Go-Radio-Gibraltar-s201872/",
+                "http://tunein.com/station/?StationId=241021",
+                "http://tunein.com/station/?StationId=198896"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "tunein",
+                    "format": "tunein://?profile/s$1",
+                    "testResults": [
+                        "tunein://?profile/s213837",
+                        "tunein://?profile/s201872",
+                        "tunein://?profile/s241021",
+                        "tunein://?profile/s198896"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Add Podcast",
+            "regex": "http(?:s)?://(?:www\\.)?overcast\\.fm/\\+.+$",
+            "formats": [
+                {
+                    "appIdentifier": "overcast",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(overcast:///\\\\d+).*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }"
+                }
+            ]
+        },
+        {
+            "title": "Add iTunes Podcast",
+            "regex": "http(?:s)?://itunes\\.apple\\.com/(.*/)*podcast/(.*/)?id\\d+.*$",
+            "testInputs": [
+                "https://itunes.apple.com/us/podcast/serial/id917918570?mt=2",
+                "https://itunes.apple.com/us/podcast/episode-01-the-alibi/id917918570?i=319686008&mt=2",
+                "https://itunes.apple.com/us/podcast/id909109678",
+                "https://itunes.apple.com/podcast/id909109678"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "overcast",
+                    "script": "function process(url, completionHandler) { completionHandler('overcast://x-callback-url/add?url=' + encodeURIComponent(url)); }",
+                    "testResults": [
+                        "overcast://x-callback-url/add?url=https%3A%2F%2Fitunes.apple.com%2Fus%2Fpodcast%2Fserial%2Fid917918570%3Fmt%3D2",
+                        "overcast://x-callback-url/add?url=https%3A%2F%2Fitunes.apple.com%2Fus%2Fpodcast%2Fepisode-01-the-alibi%2Fid917918570%3Fi%3D319686008%26mt%3D2",
+                        "overcast://x-callback-url/add?url=https%3A%2F%2Fitunes.apple.com%2Fus%2Fpodcast%2Fid909109678",
+                        "overcast://x-callback-url/add?url=https%3A%2F%2Fitunes.apple.com%2Fpodcast%2Fid909109678"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Product",
+            "regex": "http(?:s)?://(?:www\\.)?producthunt\\.com/(?:posts|tech|games)/([a-zA-Z0-9_\\-%]+).*$",
+            "testInputs": [
+                "http://www.producthunt.com/posts/opener",
+                "http://www.producthunt.com/tech/free",
+                "http://www.producthunt.com/games/codin-game"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "producthunt",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*/r/[0-9a-fA-F]+/(\\\\d+).*'); var match = regex.exec(res)[1]; completionHandler('producthunt://post/' + match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "producthunt://post/22922",
+                        "producthunt://post/23810",
+                        "producthunt://post/24101"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open User",
+            "regex": "http(?:s)?://(?:www\\.)?producthunt\\.com/@(\\w+)(?!.*/collections/.*)(.*)$",
+            "testInputs": [
+                "http://www.producthunt.com/@timonus"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "producthunt",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*cdn.producthunt.com/(\\\\d+).*'); var match = regex.exec(res)[1]; completionHandler('producthunt://user/' + match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "producthunt://user/141594"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Collection",
+            "regex": "http(?:s)?://(?:www\\.)?producthunt\\.com/@(?:\\w+)/collections/.*$",
+            "testInputs": [
+                "http://www.producthunt.com/@timonus/collections/tijo"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "producthunt",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*collection_id=(\\\\d+).*'); var match = regex.exec(res)[1]; completionHandler('producthunt://collection/' + match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "producthunt://collection/12529"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Talk",
+            "regex": "http(?:s?)://(?:www\\.)?ted\\.com/talks/(\\w+).*$",
+            "testInputs": [
+                "http://www.ted.com/talks/roman_mars_why_city_flags_may_be_the_worst_designed_thing_you_ve_never_noticed?share=194536fc14",
+                "http://www.ted.com/talks/kelly_mcgonigal_how_to_make_stress_your_friend?language=en"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "ted",
+                    "script": "function process(url, completionHandler) { var regex = /http(?:s?):\\/\\/(?:www.)?ted.com\\/talks\\/(\\w+).*$/; var match = regex.exec(url); var query = match[1]; url = 'http://api.ted.com/v1/talks/' + query + '.json?api-key=78wnbehhwe8yfd5ch9q87pvc'; var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = JSON.parse(xmlhttp.responseText); completionHandler('ted://x-callback-url/talk?talkID=' + res['talk']['id']); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "ted://x-callback-url/talk?talkID=2253",
+                        "ted://x-callback-url/talk?talkID=1815"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Subreddit",
+            "regex": "http(?:s)?://(?:www\\.)?reddit\\.com/r/([a-zA-Z0-9_\\-%]+)(?:/(\\?.*)?$|\\?.*$|/$)?$",
+            "testInputs": [
+                "http://www.reddit.com/r/gaming/",
+                "http://www.reddit.com/r/gaming",
+                "http://www.reddit.com/r/gaming/?hello=world",
+                "http://www.reddit.com/r/gaming?hello=world",
+                "http://www.reddit.com/r/gaming/comments/3d2ewz/nintendo_president_satoru_iwata_passes_away/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "alienblue",
+                    "format": "alienblue://r/$1",
+                    "testResults": [
+                        "alienblue://r/gaming",
+                        "alienblue://r/gaming",
+                        "alienblue://r/gaming",
+                        "alienblue://r/gaming",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Thread",
+            "regex": "(http(?:s)?://(?:www\\.)?reddit\\.com/r/[a-zA-Z0-9_\\-%]+/comments/\\w+/.*)$",
+            "testInputs": [
+                "http://www.reddit.com/r/gaming/comments/3d2ewz/nintendo_president_satoru_iwata_passes_away/",
+                "https://www.reddit.com/r/VintageApple/comments/29xca9/what_is_apples_next_step/",
+                "http://www.reddit.com/r/gaming"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "alienblue",
+                    "format": "alienblue://thread/$1",
+                    "testResults": [
+                        "alienblue://thread/http://www.reddit.com/r/gaming/comments/3d2ewz/nintendo_president_satoru_iwata_passes_away/",
+                        "alienblue://thread/https://www.reddit.com/r/VintageApple/comments/29xca9/what_is_apples_next_step/",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "(?:http(?:s)?)://((?:www\\.|m\\.)?reddit\\.com/.*)",
+            "testInputs": [
+                "https://m.reddit.com/r/sports/comments/38uhq3/american_pharoah_wins_belmont_stakes_and_triple/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "amrc",
+                    "format": "amrc://$1",
+                    "testResults": [
+                        "amrc://m.reddit.com/r/sports/comments/38uhq3/american_pharoah_wins_belmont_stakes_and_triple/"
+                    ]
+                },
+                {
+                    "appIdentifier": "biscuit",
+                    "format": "biscuit://$1",
+                    "testResults": [
+                        "biscuit://m.reddit.com/r/sports/comments/38uhq3/american_pharoah_wins_belmont_stakes_and_triple/"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "http(?:s)?://(?:www\\.)?stumbleupon\\.com/(?:su|to/s)/(\\w+).*$",
+            "testInputs": [
+                "http://www.stumbleupon.com/to/s/4F18Gf",
+                "http://www.stumbleupon.com/su/4F18Gf/thetrendstoday.com/operation-urgent-fury-the-invasion-of-granada-documentary/",
+                "http://www.stumbleupon.com/su/1Yhr8a/merabheja.com/tech-hacks/?ref_src=tw"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "stumbleupon",
+                    "format": "stumbleupon://urlid/$1",
+                    "testResults": [
+                        "stumbleupon://urlid/4F18Gf",
+                        "stumbleupon://urlid/4F18Gf",
+                        "stumbleupon://urlid/1Yhr8a"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Story",
+            "regex": "(?:http(?:s?)://(?:www\\.)?medium\\.com/(?:(?:p/)|(?:\\S+/(?:[a-zA-Z0-9_%]+-)+)))([0-9a-fA-F]+)(?:/?)(?:\\?.*)?$",
+            "testInputs": [
+                "https://medium.com/@timonus",
+                "https://medium.com/@HelloAngels/hello-color-genomics-c679cddd7ed8",
+                "https://medium.com/technology-musings/my-rocky-first-24hrs-with-the-%E1%B4%A1%E1%B4%80%E1%B4%9B%E1%B4%84%CA%9C-67c841702a70",
+                "https://www.medium.com/p/822960e8653d"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "medium",
+                    "format": "medium:/p/$1",
+                    "testResults": [
+                        null,
+                        "medium:/p/c679cddd7ed8",
+                        "medium:/p/67c841702a70",
+                        "medium:/p/822960e8653d"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Story",
+            "regex": "http(?:s)?://[a-zA-Z0-9-.]+/(?:p/|(?:\\w*/)?(?:[a-zA-Z0-9_%]+-)+)([0-9a-fA-F]+)\\n.*\"(?:(?i)x-powered-by)\":\"Kale\",.*$",
+            "includeHeaders": true,
+            "formats": [
+                {
+                    "appIdentifier": "medium",
+                    "format": "medium:/p/$1"
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "(?:http(?:s?)://(?:www\\.)?medium\\.com/)(@[a-zA-Z0-9_-]+)(?:(?:\\?|/\\?).*)?$",
+            "testInputs": [
+                "https://medium.com/@timonus",
+                "https://www.medium.com/@HelloAngels/hello-color-genomics-c679cddd7ed8"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "medium",
+                    "format": "medium:/$1",
+                    "testResults": [
+                        "medium:/@timonus",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Product",
+            "regex": "http(?:s)?://(?:\\w+\\.)*(?:amazon|amzn)((?:\\.\\w+)+)/(?:.*?/)?(?:dp|gp|product)/([a-zA-Z0-9]+).*$",
+            "testInputs": [
+                "http://www.amazon.com/Mondaine-A990-CLOCK-11SBC-Clock-White-Frame/dp/B0016QNNP6/ref=sr_1_1?ie=UTF8&qid=1429471063&sr=8-1&keywords=mondaine+clock",
+                "http://www.amazon.com/dp/B0016QNNP6",
+                "http://www.amazon.com/gp/product/B0016QNNP6",
+                "http://www.amazon.com/dp/B0016QNNP6/ref=cm_sw_su_dp",
+                "http://www.amazon.com/gp/product/B0016QNNP6",
+                "http://www.amazon.co.uk/Untitled/dp/1472230078/ref=sr_1_1/277-2117425-9287062?ie=UTF8&qid=1428652808&sr=8-1&keywords=9781472230072",
+                "http://www.amazon.de/dp/B00N5BQ62",
+                "http://smile.amazon.com/dp/0812522397/ref=cm_sw_r_awd_m6xOvb9NW6G48"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "amazon",
+                    "format": "com.amazon.mobile.shopping://amazon$1/products/$2",
+                    "testResults": [
+                        "com.amazon.mobile.shopping://amazon.com/products/B0016QNNP6",
+                        "com.amazon.mobile.shopping://amazon.com/products/B0016QNNP6",
+                        "com.amazon.mobile.shopping://amazon.com/products/B0016QNNP6",
+                        "com.amazon.mobile.shopping://amazon.com/products/B0016QNNP6",
+                        "com.amazon.mobile.shopping://amazon.com/products/B0016QNNP6",
+                        "com.amazon.mobile.shopping://amazon.co.uk/products/1472230078",
+                        "com.amazon.mobile.shopping://amazon.de/products/B00N5BQ62",
+                        "com.amazon.mobile.shopping://amazon.com/products/0812522397"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Product",
+            "regex": "(?:(?:http(?:s?)://)(?:www.|rover.|m.)?ebay(?:\\.\\w+)+/itm/(?:[0-9A-Za-z_-]+/)?)(\\d+)(?:/|\\?)?(?:.*)$",
+            "testInputs": [
+                "http://www.ebay.com/itm/Mondaine-Classic-Swiss-Railways-White-Dial-Black-Leather-Mens-Watch-/181453530366?pt=LH_DefaultDomain_0&hash=item2a3f7924fe",
+                "http://www.ebay.com/itm/181453530366",
+                "http://m.ebay.com/itm/181453530366",
+                "http://www.ebay.com/itm/-/181453530366",
+                "http://www.ebay.es/itm/like/151701307496?clk_rvr_id=841126354199&item=151701307496&lgeo=1&utm_medium=twitter&utm_source=twitterfeed&vectorid=229501&rmvSB=true"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "ebay",
+                    "format": "ebay://launch?itm=$1",
+                    "testResults": [
+                        "ebay://launch?itm=181453530366",
+                        "ebay://launch?itm=181453530366",
+                        "ebay://launch?itm=181453530366",
+                        "ebay://launch?itm=181453530366",
+                        "ebay://launch?itm=151701307496"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Project",
+            "regex": "(?:http(?:s?)://)((?:www.)?kickstarter.com/projects/[a-zA-Z0-9_%-]+/[a-zA-Z0-9_%-]+)/?(\\?.*)?$",
+            "testInputs": [
+                "https://www.kickstarter.com/projects/1425492550/sesame-your-key-reinvented?ref=dash",
+                "https://www.kickstarter.com/projects/paulgtoys/pterodactyl-5-rc-flying-lizard",
+                "https://www.kickstarter.com/projects/hyperchiller/hyperchiller-make-iced-coffee-in-one-minute/?ref=kicktraq"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "kickstarter",
+                    "format": "ksr://$1",
+                    "testResults": [
+                        "ksr://www.kickstarter.com/projects/1425492550/sesame-your-key-reinvented",
+                        "ksr://www.kickstarter.com/projects/paulgtoys/pterodactyl-5-rc-flying-lizard",
+                        "ksr://www.kickstarter.com/projects/hyperchiller/hyperchiller-make-iced-coffee-in-one-minute"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Item",
+            "regex": "http(?:s?)://(?:www.|m.)?etsy.com/(?:.+/)*listing/(\\d+).*$",
+            "testInputs": [
+                "https://www.etsy.com/listing/104204797/antiqued-brass-finished-golf-king-coat?ref=shop_home_active_8#20150510032301",
+                "https://www.etsy.com/listing/232911333/hand-painted-saw-blade-summer-old-truck",
+                "https://www.etsy.com/listing/197006378/vintage-dimpled-tumblers-retro-drinking?ref=shop_home_active_2",
+                "https://www.etsy.com/uk/listing/216304624/industrial-glass-table-lamp-glass-floor"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "etsy",
+                    "format": "etsy://listing/$1",
+                    "testResults": [
+                        "etsy://listing/104204797",
+                        "etsy://listing/232911333",
+                        "etsy://listing/197006378",
+                        "etsy://listing/216304624"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Comic",
+            "regex": "(?:http(?:s?)://(?:www.)?xkcd.com/)(\\d+)(?:\\S*)$",
+            "testInputs": [
+                "http://xkcd.com/1508/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "xkcdhd",
+                    "format": "xkcd://$1",
+                    "testResults": [
+                        "xkcd://1508"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Frontback",
+            "regex": "http(s?)://(www.)?frontback.me/p/[a-zA-Z0-9]+(\\S*)$",
+            "testInputs": [
+                "http://frontback.me/p/4EWgW7lD"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "frontback",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*<meta content=\"(.*)\" name=\"twitter:app:url:iphone\".*>.*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "frontback://posts/1628618"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Event",
+            "regex": "http(?:s)?://(?:www\\.)?eventbrite(?:\\.\\w+)+/e(?:vent)?/(?:[a-zA-Z0-9_]+-)*(\\d+).*$",
+            "testInputs": [
+                "https://www.eventbrite.com/e/ths-key-club-empowerment-butterfly-benefit-concert-ft-midnight-red-tickets-16544017602",
+                "http://www.eventbrite.co.uk/e/blacklistedtm-tickets-16335494905",
+                "http://www.eventbrite.co.uk/e/16335494905",
+                "http://www.eventbrite.co.uk/event/blacklistedtm-tickets-16335494905"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "eventbrite",
+                    "format": "com-eventbrite-attendee:event/$1",
+                    "testResults": [
+                        "com-eventbrite-attendee:event/16544017602",
+                        "com-eventbrite-attendee:event/16335494905",
+                        "com-eventbrite-attendee:event/16335494905",
+                        "com-eventbrite-attendee:event/16335494905"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Event",
+            "regex": "http(?:s?)://(?:m.|mobile.|www.)?meetup.com/(?:\\S+)/(\\d+)(?:/|\\?).*$",
+            "testInputs": [
+                "http://www.meetup.com/Mobilize-MN/events/221392586/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "meetup",
+                    "format": "meetup://events/$1",
+                    "testResults": [
+                        "meetup://events/221392586"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Event",
+            "regex": "http(?:s)?://(?:www\\.|m\\.|mobile\\.)stubhub\\.com/(?:\\S+/)*(?:\\w+-)*(\\d+).*$",
+            "testInputs": [
+                "http://www.stubhub.com/romeo-santos-rosemont-allstate-arena-6-12-2015-9230761/",
+                "https://www.stubhub.com/death-grips-tickets/death-grips-seattle-the-showbox-6-19-2015-9278341/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "stubhub",
+                    "format": "stubhub://stubhub.com/?event_id=$1",
+                    "testResults": [
+                        "stubhub://stubhub.com/?event_id=9230761",
+                        "stubhub://stubhub.com/?event_id=9278341"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Event",
+            "regex": "http(s)?://(www\\.)?goldstar\\.com/events/[a-zA-Z0-9\\-_]+/[a-zA-Z0-9\\-_]+.*$",
+            "testInputs": [
+                "https://www.goldstar.com/events/san-diego-ca/lemon-zest-and-garlic-fest-tickets-1"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "goldstar",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(goldstar:\/\/.*?)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "goldstar://goldstar.com/event/100763"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s)?://(?:touch\\.)?(?:www\\.|m\\.)?linkedin\\.com/profile/view?.*id=(\\d+).*$",
+            "testInputs": [
+                "https://www.linkedin.com/profile/view?id=26225641&authType=name&trk=hp-feed-member-name"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "linkedin",
+                    "format": "linkedin://profile/$1",
+                    "testResults": [
+                        "linkedin://profile/26225641"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Title",
+            "regex": "http(?:s)?://(?:www\\.|m\\.)imdb\\.com/title/(tt\\d+).*$",
+            "testInputs": [
+                "http://m.imdb.com/title/tt1285016/?ref_=fn_al_tt_1"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "imdb",
+                    "format": "imdb:///title/$1",
+                    "testResults": [
+                        "imdb:///title/tt1285016"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Chart",
+            "regex": "http(?:s)?://(?:www\\.|m\\.)imdb\\.com/chart/(\\w+).*$",
+            "testInputs": [
+                "http://m.imdb.com/chart/bottom"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "imdb",
+                    "format": "imdb:///chart/$1",
+                    "testResults": [
+                        "imdb:///chart/bottom"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Name",
+            "regex": "http(?:s)?://(?:www\\.|m\\.)imdb\\.com/name/(nm\\d+).*$",
+            "testInputs": [
+                "http://m.imdb.com/name/nm0251986/?ref_=m_tt_cl_i1"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "imdb",
+                    "format": "imdb:///name/$1",
+                    "testResults": [
+                        "imdb:///name/nm0251986"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Activity",
+            "regex": "http(?:s)?://(?:www\\.|m\\.)?strava.com/activities/(\\d+).*$",
+            "testInputs": [
+                "https://www.strava.com/activities/304977054"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "strava",
+                    "format": "strava://activities/$1",
+                    "testResults": [
+                        "strava://activities/304977054"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Run",
+            "regex": "http(?:s)?://(?:www\\.)?runkeeper\\.com/(?:user/\\w+/activity/\\d+|activity/?.*)",
+            "testInputs": [
+                "http://runkeeper.com/user/rtmfd/activity/593149485",
+                "http://runkeeper.com/activity?userId=17521263&trip=593152993"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "runkeeper",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(runkeeper:\/\/.*?)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "runkeeper://?view=activity&tripuuid=e5154321-6a6c-4b1f-8547-734c74ce538a&deepLinkSource=twitterCard",
+                        "runkeeper://?view=activity&tripuuid=18ff2a03-f397-4376-8c00-ded503b5732f&deepLinkSource=twitterCard"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "http(?:s)?://((?:\\w+\\.)+wikipedia\\.(?:com|org)/.*)$",
+            "testInputs": [
+                "http://en.wikipedia.org/wiki/Bottle_opener",
+                "http://en.m.wikipedia.org/wiki/Soylent"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "wikipanion",
+                    "format": "wikipedia://$1",
+                    "testResults": [
+                        "wikipedia://en.wikipedia.org/wiki/Bottle_opener",
+                        "wikipedia://en.m.wikipedia.org/wiki/Soylent"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "http(?:s?)://((?:\\w+\\.)*github.com/.*)",
+            "formats": [
+                {
+                    "appIdentifier": "ioctocat",
+                    "format": "ioc://$1"
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "useful": "http://stackexchange.com/feeds/sites",
+            "regex": "http(?:s?)://((?:\\w+\\.)*(?:(?:stackoverflow|stackexchange|serverfault|superuser|stackapps)\\.com|mathoverflow\\.net)/.*)",
+            "testInputs": [
+                "http://stackoverflow.com/questions/30262509/union-object-acts-like-a-structure"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "stackexchange",
+                    "format": "se-zaphod://$1",
+                    "testResults": [
+                        "se-zaphod://stackoverflow.com/questions/30262509/union-object-acts-like-a-structure"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Link",
+            "regex": "http(?:s)?://((?:\\w+\\.)+quora\\.com/.*)$",
+            "testInputs": [
+                "http://www.quora.com/What-is-a-coders-worst-nightmare"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "quora",
+                    "format": "qhttp://$1",
+                    "testResults": [
+                        "qhttp://www.quora.com/What-is-a-coders-worst-nightmare"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Profile",
+            "regex": "http(?:s)?://(?:www\\.)zhihu\\.com/people/([a-zA-Z0-9_\\-%]+).*$",
+            "testInputs": [
+                "http://www.zhihu.com/people/hugo-chan"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "zhihu",
+                    "format": "zhihu://people/$1",
+                    "testResults": [
+                        "zhihu://people/hugo-chan"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Topic",
+            "regex": "http(?:s)?://(?:www\\.)zhihu\\.com/topic/(\\d+).*$",
+            "testInputs": [
+                "http://www.zhihu.com/topic/19568161"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "zhihu",
+                    "format": "zhihu://topics/$1",
+                    "testResults": [
+                        "zhihu://topics/19568161"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Question",
+            "regex": "http(?:s)?://(?:www\\.)zhihu\\.com/question/(\\d+)(?!.*/answer/\\d+).*$",
+            "testInputs": [
+                "http://www.zhihu.com/question/19907735",
+                "http://www.zhihu.com/question/21439187/answer/18228340"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "zhihu",
+                    "format": "zhihu://questions/$1",
+                    "testResults": [
+                        "zhihu://questions/19907735",
+                        null
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Answer",
+            "regex": "http(?:s)?://(?:www\\.)zhihu\\.com/question/(?:\\d+)/answer/(\\d+).*$",
+            "testInputs": [
+                "http://www.zhihu.com/question/21439187/answer/18228340"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "zhihu",
+                    "format": "zhihu://answers/$1",
+                    "testResults": [
+                        "zhihu://answers/18228340"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Note",
+            "regex": "http(?:s)?://(?:www\\.)evernote\\.com/shard/s\\d+/sh/[0-9a-fA-F\\-]+/[0-9a-fA-F]+.*$",
+            "testInputs": [
+                "https://www.evernote.com/shard/s69/sh/e431cabb-3ece-4a8b-9b82-74ff084a788d/b5b1ca28e7d947370a8c8ebb0e81b3e6"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "evernote",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(evernote:\/\/.*?)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "evernote:///view/7633933/s69/e431cabb-3ece-4a8b-9b82-74ff084a788d/e431cabb-3ece-4a8b-9b82-74ff084a788d/"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Board",
+            "regex": "http(?:s)?://(?:www\\.)?trello\\.com/b/(\\w+).*$",
+            "testInputs": [
+                "https://trello.com/b/rq2mYJNn/public-trello-boards"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "trello",
+                    "format": "trello://x-callback-url/showBoard?shortlink=$1",
+                    "testResults": [
+                        "trello://x-callback-url/showBoard?shortlink=rq2mYJNn"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Card",
+            "regex": "http(?:s)?://(?:www\\.)?trello\\.com/c/(\\w+).*$",
+            "testInputs": [
+                "https://trello.com/c/ockZMShP"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "trello",
+                    "format": "trello://x-callback-url/showCard?shortlink=$1",
+                    "testResults": [
+                        "trello://x-callback-url/showCard?shortlink=ockZMShP"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Action",
+            "regex": "",
+            "testInputs": [
+                "https://launchcenterpro.com/4w666m"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "launchcenterpro",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(launch:\/\/import.*?)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "launch://import?url=tweetbot%3A%2F%2F%2Fpost%3Ftext%3D%5Bclipboard%5D&title=Tweet%20Text&description="
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Recipe",
+            "regex": "http(?:s?)://(?:www.)?ifttt.com/recipes/([0-9]+).*$",
+            "testInputs": [
+                "https://ifttt.com/recipes/144705?z=119662",
+                "https://ifttt.com/recipes/144705-new-twitter-followers-in-a-google-spreadsheet?z=119662"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "ifttt",
+                    "format": "ifttt://shared_recipe/$1",
+                    "testResults": [
+                        "ifttt://shared_recipe/144705",
+                        "ifttt://shared_recipe/144705"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Add Workflow",
+            "regex": "http(?:s?)://(?:www.)?workflow.is/workflows/([0-9a-f]+).*$",
+            "testInputs": [
+                "https://workflow.is/workflows/304554907e6a473e9e810297509b00c5"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "workflow",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(workflow://import-workflow/.*)\".*'); var match = regex.exec(res)[1]; completionHandler(match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "workflow://import-workflow/?url=https%3A%2F%2Fworkflow-gallery.s3.amazonaws.com%2Fworkflows%2F304554907e6a473e9e810297509b00c5.wflow&amp;name=Expand%20URL"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Listing",
+            "regex": "http(?:s)?://(?:www\\.)?redfin\\.com/[a-zA-Z]{2}/(?:[a-zA-Z0-9_\\-]+/){0,2}home/(\\d+).*$",
+            "testInputs": [
+                "https://www.redfin.com/CA/San-Francisco/1261-Sanchez-St-94114/home/1760516",
+                "https://www.redfin.com/CA/San-Francisco/home/11743164",
+                "https://redfin.com/CA/home/11743164"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "redfin",
+                    "format": "redfin://home/$1",
+                    "testResults": [
+                        "redfin://home/1760516",
+                        "redfin://home/11743164",
+                        "redfin://home/11743164"
+                    ]
+                }
+            ]
+        }
+    ],
+    "apps": [
+        {
+            "identifier": "twitter",
+            "displayName": "Twitter",
+            "storeIdentifier": "333903271",
+            "scheme": "twitter://"
+        },
+        {
+            "identifier": "instagram",
+            "displayName": "Instagram",
+            "storeIdentifier": "389801252",
+            "scheme": "instagram://"
+        },
+        {
+            "identifier": "flickr",
+            "displayName": "Flickr",
+            "storeIdentifier": "328407587",
+            "scheme": "flickr://",
+            "docs": "https://www.flickr.com/services/api/misc.urls.html"
+        },
+        {
+            "identifier": "500px",
+            "displayName": "500px",
+            "storeIdentifier": "471965292",
+            "scheme": "px://"
+        },
+        {
+            "identifier": "tumblr",
+            "displayName": "Tumblr",
+            "storeIdentifier": "305343404",
+            "scheme": "tumblr://"
+        },
+        {
+            "identifier": "storehouse",
+            "displayName": "Storehouse",
+            "storeIdentifier": "791297521",
+            "scheme": "storehouse://"
+        },
+        {
+            "identifier": "path",
+            "displayName": "Path",
+            "storeIdentifier": "403639508",
+            "scheme": "path://"
+        },
+        {
+            "identifier": "pinterest",
+            "displayName": "Pinterest",
+            "storeIdentifier": "429047995",
+            "scheme": "pinterest://"
+        },
+        {
+            "identifier": "flipboard",
+            "displayName": "Flipboard",
+            "storeIdentifier": "358801284",
+            "scheme": "flipboard://"
+        },
+        {
+            "identifier": "weibo",
+            "displayName": "Weibo",
+            "storeIdentifier": "350962117",
+            "scheme": "weibo://"
+        },
+        {
+            "identifier": "moke",
+            "displayName": "Moke",
+            "storeIdentifier": "880813963",
+            "scheme": "moke://",
+            "docs": "http://moke.com/moke/url_schemes.html"
+        },
+        {
+            "identifier": "foursquare",
+            "displayName": "Foursquare",
+            "storeIdentifier": "306934924",
+            "scheme": "foursquare://"
+        },
+        {
+            "identifier": "swarm",
+            "displayName": "Swarm",
+            "storeIdentifier": "870161082",
+            "scheme": "swarm://"
+        },
+        {
+            "identifier": "airbnb",
+            "displayName": "Airbnb",
+            "storeIdentifier": "401626263",
+            "scheme": "airbnb://"
+        },
+        {
+            "identifier": "yelp",
+            "displayName": "Yelp",
+            "storeIdentifier": "284910350",
+            "scheme": "yelp://"
+        },
+        {
+            "identifier": "googlemaps",
+            "displayName": "Google Maps",
+            "storeIdentifier": "585027354",
+            "scheme": "comgooglemapsurl://",
+            "docs": "https://developers.google.com/maps/documentation/ios/urlscheme"
+        },
+        {
+            "identifier": "youtube",
+            "displayName": "YouTube",
+            "storeIdentifier": "544007664",
+            "scheme": "youtube://"
+        },
+        {
+            "identifier": "protube",
+            "displayName": "ProTube",
+            "storeIdentifier": "931201696",
+            "scheme": "protube://",
+            "docs": "http://j-gessner.de/1/post/2014/12/protube-2-url-scheme.html"
+        },
+        {
+            "identifier": "vimeo",
+            "displayName": "Vimeo",
+            "storeIdentifier": "425194759",
+            "scheme": "vimeo://"
+        },
+        {
+            "identifier": "hulu",
+            "displayName": "Hulu",
+            "storeIdentifier": "376510438",
+            "scheme": "hulu://"
+        },
+        {
+            "identifier": "vevo",
+            "displayName": "Vevo",
+            "storeIdentifier": "385815082",
+            "scheme": "vevo://"
+        },
+        {
+            "identifier": "vine",
+            "displayName": "Vine",
+            "storeIdentifier": "592447445",
+            "scheme": "vine://"
+        },
+        {
+            "identifier": "periscope",
+            "displayName": "Periscope",
+            "storeIdentifier": "972909677",
+            "scheme": "pscp://"
+        },
+        {
+            "identifier": "twitch",
+            "displayName": "Twitch",
+            "storeIdentifier": "460177396",
+            "scheme": "twitch://",
+            "docs": "https://github.com/justintv/Twitch-API/blob/master/mobile_deeplinks.md"
+        },
+        {
+            "identifier": "flipagram",
+            "displayName": "Flipagram",
+            "storeIdentifier": "512727332",
+            "scheme": "flipagram://"
+        },
+        {
+            "identifier": "meerkat",
+            "displayName": "Meerkat",
+            "storeIdentifier": "954105918",
+            "scheme": "meerkat://"
+        },
+        {
+            "identifier": "dropbox",
+            "displayName": "Dropbox",
+            "storeIdentifier": "327630330",
+            "scheme": "dbapi-6://"
+        },
+        {
+            "identifier": "googledrive",
+            "displayName": "Google Drive",
+            "storeIdentifier": "507874739",
+            "scheme": "googledrive://",
+            "docs": "http://stackoverflow.com/questions/21049526/how-does-one-open-a-document-in-the-native-google-drive-ios-app"
+        },
+        {
+            "identifier": "box",
+            "displayName": "Box",
+            "storeIdentifier": "290853822",
+            "scheme": "boxopenshared://"
+        },
+        {
+            "identifier": "tweetbot",
+            "displayName": "Tweetbot",
+            "storeIdentifier": "722294701",
+            "scheme": "tweetbot://"
+        },
+        {
+            "identifier": "twitterrific",
+            "displayName": "Twitterrific",
+            "storeIdentifier": "580311103",
+            "scheme": "twitterrific://"
+        },
+        {
+            "identifier": "rdio",
+            "displayName": "Rdio",
+            "storeIdentifier": "335060889",
+            "scheme": "rdio://"
+        },
+        {
+            "identifier": "spotify",
+            "displayName": "Spotify",
+            "storeIdentifier": "324684580",
+            "scheme": "spotify://"
+        },
+        {
+            "identifier": "beats",
+            "displayName": "Beats Music",
+            "storeIdentifier": "781817640",
+            "scheme": "beatsmusic://"
+        },
+        {
+            "identifier": "soundcloud",
+            "displayName": "SoundCloud",
+            "storeIdentifier": "336353151",
+            "scheme": "soundcloud://"
+        },
+        {
+            "identifier": "hypemachine",
+            "displayName": "Hype Machine",
+            "storeIdentifier": "414315986",
+            "scheme": "hypem://"
+        },
+        {
+            "identifier": "tunein",
+            "displayName": "TuneIn Radio",
+            "storeIdentifier": "418987775",
+            "scheme": "tunein://"
+        },
+        {
+            "identifier": "overcast",
+            "displayName": "Overcast",
+            "storeIdentifier": "888422857",
+            "scheme": "overcast://"
+        },
+        {
+            "identifier": "producthunt",
+            "displayName": "Product Hunt",
+            "storeIdentifier": "904658671",
+            "scheme": "producthunt://"
+        },
+        {
+            "identifier": "ted",
+            "displayName": "TED",
+            "storeIdentifier": "376183339",
+            "scheme": "ted://"
+        },
+        {
+            "identifier": "alienblue",
+            "displayName": "Alien Blue",
+            "storeIdentifier": "923187241",
+            "scheme": "alienblue://",
+            "new": true
+        },
+        {
+            "identifier": "amrc",
+            "displayName": "amrc",
+            "storeIdentifier": "572391252",
+            "scheme": "amrc://",
+            "docs": "https://www.reddit.com/r/amrc/comments/329z6d/beta_just_wanted_to_say_thanks/"
+        },
+        {
+            "identifier": "biscuit",
+            "displayName": "Biscuit",
+            "storeIdentifier": "697779797",
+            "scheme": "biscuit://",
+            "platform": "pad"
+        },
+        {
+            "identifier": "stumbleupon",
+            "displayName": "StumbleUpon",
+            "storeIdentifier": "386244833",
+            "scheme": "stumbleupon://"
+        },
+        {
+            "identifier": "medium",
+            "displayName": "Medium",
+            "storeIdentifier": "828256236",
+            "scheme": "medium://"
+        },
+        {
+            "identifier": "amazon",
+            "displayName": "Amazon",
+            "storeIdentifier": "297606951",
+            "scheme": "com.amazon.mobile.shopping://"
+        },
+        {
+            "identifier": "ebay",
+            "displayName": "eBay",
+            "storeIdentifier": "282614216",
+            "scheme": "ebay://"
+        },
+        {
+            "identifier": "kickstarter",
+            "displayName": "Kickstarter",
+            "storeIdentifier": "596961532",
+            "scheme": "ksr://"
+        },
+        {
+            "identifier": "etsy",
+            "displayName": "Etsy",
+            "storeIdentifier": "477128284",
+            "scheme": "etsy://"
+        },
+        {
+            "identifier": "xkcdhd",
+            "displayName": "xkcd HD",
+            "storeIdentifier": "369631343",
+            "scheme": "xkcd://"
+        },
+        {
+            "identifier": "frontback",
+            "displayName": "Frontback",
+            "storeIdentifier": "673566671",
+            "scheme": "frontback://"
+        },
+        {
+            "identifier": "eventbrite",
+            "displayName": "Eventbrite",
+            "storeIdentifier": "487922291",
+            "scheme": "com-eventbrite-attendee://"
+        },
+        {
+            "identifier": "meetup",
+            "displayName": "Meetup",
+            "storeIdentifier": "375990038",
+            "scheme": "meetup://"
+        },
+        {
+            "identifier": "imdb",
+            "displayName": "IMDb",
+            "storeIdentifier": "342792525",
+            "scheme": "imdb://",
+            "docs": "http://wiki.akosma.com/IPhone_URL_Schemes#IMDb_Movies_.26_TV and http://handleopenurl.com/scheme/imdb-movies-and-tv"
+        },
+        {
+            "identifier": "stubhub",
+            "displayName": "StubHub",
+            "storeIdentifier": "366562751",
+            "scheme": "stubhub://"
+        },
+        {
+            "identifier": "goldstar",
+            "displayName": "Goldstar",
+            "storeIdentifier": "721048990",
+            "scheme": "goldstar://",
+            "new": true
+        },
+        {
+            "identifier": "linkedin",
+            "displayName": "LinkedIn",
+            "storeIdentifier": "288429040",
+            "scheme": "linkedin://"
+        },
+        {
+            "identifier": "strava",
+            "displayName": "Strava",
+            "storeIdentifier": "426826309",
+            "scheme": "strava://"
+        },
+        {
+            "identifier": "runkeeper",
+            "displayName": "RunKeeper",
+            "storeIdentifier": "300235330",
+            "scheme": "runkeeper://"
+        },
+        {
+            "identifier": "wikipanion",
+            "displayName": "Wikipanion",
+            "storeIdentifier": "288349436",
+            "scheme": "wikipanion://"
+        },
+        {
+            "identifier": "ioctocat",
+            "displayName": "iOctocat",
+            "storeIdentifier": "669642611",
+            "scheme": "ioc://"
+        },
+        {
+            "identifier": "stackexchange",
+            "displayName": "Stack Exchange",
+            "storeIdentifier": "871299723",
+            "scheme": "se-zaphod://"
+        },
+        {
+            "identifier": "quora",
+            "displayName": "Quora",
+            "storeIdentifier": "456034437",
+            "scheme": "quora://"
+        },
+        {
+            "identifier": "zhihu",
+            "displayName": "Zhihu",
+            "storeIdentifier": "432274380",
+            "scheme": "zhihu://"
+        },
+        {
+            "identifier": "evernote",
+            "displayName": "Evernote",
+            "storeIdentifier": "281796108",
+            "scheme": "evernote://",
+            "docs": "https://dev.evernote.com/doc/articles/note_links.php"
+        },
+        {
+            "identifier": "trello",
+            "displayName": "Trello",
+            "storeIdentifier": "461504587",
+            "docs": "https://trello.com/c/cJfzOdDm/188-automate-with-url-scheme",
+            "scheme": "trello://"
+        },
+        {
+            "identifier": "launchcenterpro",
+            "displayName": "Launch Center Pro",
+            "storeIdentifier": "532016360",
+            "scheme": "launch://"
+        },
+        {
+            "identifier": "ifttt",
+            "displayName": "IFTTT",
+            "storeIdentifier": "660944635",
+            "scheme": "ifttt://"
+        },
+        {
+            "identifier": "workflow",
+            "displayName": "Workflow",
+            "storeIdentifier": "915249334",
+            "scheme": "workflow://"
+        },
+        {
+            "identifier": "pebbletime",
+            "displayName": "Pebble Time",
+            "storeIdentifier": "957997620",
+            "scheme": "pebble-3://",
+            "new": true
+        },
+        {
+            "identifier": "redfin",
+            "displayName": "Redfin",
+            "storeIdentifier": "327962480",
+            "scheme": "redfin://"
+        }
+    ]
+}

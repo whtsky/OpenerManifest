@@ -2104,6 +2104,24 @@
             ]
         },
         {
+            "title": "Open Details",
+            "regex": "http(?:s)?://(?:\\w+\\.)?zillow\\.com/homedetails/.*?(\\d+)_zpid.*$",
+            "testInputs": [
+                "http://www.zillow.com/homedetails/7500-SW-144th-St-Palmetto-Bay-FL-33158/44293525_zpid/",
+                "http://www.zillow.com/homedetails/44293525_zpid/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "zillow",
+                    "format": "zillowapp://hdp/$1",
+                    "testResults": [
+                        "zillowapp://hdp/44293525",
+                        "zillowapp://hdp/44293525"
+                    ]
+                }
+            ]
+        },
+        {
             "title": "Open Listing",
             "regex": "http(?:s)?://(?:www\\.)?redfin\\.com/[a-zA-Z]{2}/(?:[a-zA-Z0-9_\\-]+/){0,2}home/(\\d+).*$",
             "testInputs": [
@@ -2557,6 +2575,13 @@
             "displayName": "Pebble Time",
             "storeIdentifier": "957997620",
             "scheme": "pebble-3://",
+            "new": true
+        },
+        {
+            "identifier": "zillow",
+            "displayName": "Zillow",
+            "storeIdentifier": "310738695",
+            "scheme": "zillowapp://",
             "new": true
         },
         {

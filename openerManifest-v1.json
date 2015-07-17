@@ -1487,6 +1487,24 @@
             ]
         },
         {
+            "title": "Open Post",
+            "regex": "http(?:s)?://(?:www\\.)?buzzfeed\\.com/(\\w+/[a-zA-Z0-9_\\-%]+).*$",
+            "testInputs": [
+                "http://www.buzzfeed.com/brendanklinkenberg/whose-netflix-password-are-you-using#.gtMaGm7ZL2",
+                "http://www.buzzfeed.com/mathewguiver/13-amazing-faces-britney-spears-made-at-the-espys"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "buzzfeed",
+                    "format": "buzzfeed://buzz/$1",
+                    "testResults": [
+                        "buzzfeed://buzz/brendanklinkenberg/whose-netflix-password-are-you-using",
+                        "buzzfeed://buzz/mathewguiver/13-amazing-faces-britney-spears-made-at-the-espys"
+                    ]
+                }
+            ]
+        },
+        {
             "title": "Open Link",
             "regex": "(?:http(?:s)?)://((?:www\\.|m\\.)?reddit\\.com/.*)",
             "testInputs": [
@@ -2384,10 +2402,10 @@
             "scheme": "producthunt://"
         },
         {
-            "identifier": "ted",
-            "displayName": "TED",
-            "storeIdentifier": "376183339",
-            "scheme": "ted://"
+            "identifier": "medium",
+            "displayName": "Medium",
+            "storeIdentifier": "828256236",
+            "scheme": "medium://"
         },
         {
             "identifier": "alienblue",
@@ -2395,6 +2413,19 @@
             "storeIdentifier": "923187241",
             "scheme": "alienblue://",
             "new": true
+        },
+        {
+            "identifier": "buzzfeed",
+            "displayName": "BuzzFeed",
+            "storeIdentifier": "352969997",
+            "scheme": "buzzfeed://",
+            "new": true
+        },
+        {
+            "identifier": "ted",
+            "displayName": "TED",
+            "storeIdentifier": "376183339",
+            "scheme": "ted://"
         },
         {
             "identifier": "amrc",
@@ -2415,12 +2446,6 @@
             "displayName": "StumbleUpon",
             "storeIdentifier": "386244833",
             "scheme": "stumbleupon://"
-        },
-        {
-            "identifier": "medium",
-            "displayName": "Medium",
-            "storeIdentifier": "828256236",
-            "scheme": "medium://"
         },
         {
             "identifier": "amazon",

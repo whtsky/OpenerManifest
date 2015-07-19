@@ -2551,8 +2551,7 @@
             "identifier": "goldstar",
             "displayName": "Goldstar",
             "storeIdentifier": "721048990",
-            "scheme": "goldstar://",
-            "new": true
+            "scheme": "goldstar://"
         },
         {
             "identifier": "linkedin",
@@ -2638,8 +2637,7 @@
             "identifier": "pebbletime",
             "displayName": "Pebble Time",
             "storeIdentifier": "957997620",
-            "scheme": "pebble-3://",
-            "new": true
+            "scheme": "pebble-3://"
         },
         {
             "identifier": "zillow",

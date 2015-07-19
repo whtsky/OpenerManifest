@@ -1059,6 +1059,29 @@
         },
         {
             "title": "Open Video",
+            "regex": "http(?:s)?://(?:\\w+\\.)?youku\\.com/v_show/id_(\\w+).*$",
+            "testInputs": [
+                "http://v.youku.com/v_show/id_XNDI2Mjk2MTg0.html"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "youku",
+                    "format": "youku://play?vid=$1",
+                    "testResults": [
+                        "youku://play?vid=XNDI2Mjk2MTg0"
+                    ]
+                },
+                {
+                    "appIdentifier": "youkuhd",
+                    "format": "youkuhd://play?vid=$1",
+                    "testResults": [
+                        "youkuhd://play?vid=XNDI2Mjk2MTg0"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Video",
             "regex": "http(?:s)?://(?:www\\.)?hulu(?:\\.\\w+)+/watch/(\\d+).*$",
             "testInputs": [
                 "http://www.hulu.com/watch/804690?linkId=14918334",
@@ -2278,6 +2301,22 @@
             "displayName": "Vimeo",
             "storeIdentifier": "425194759",
             "scheme": "vimeo://"
+        },
+        {
+            "identifier": "youku",
+            "displayName": "Youku",
+            "storeIdentifier": "336141475",
+            "scheme": "youku://",
+            "platform": "phone",
+            "new": true
+        },
+        {
+            "identifier": "youkuhd",
+            "displayName": "Youku HD",
+            "storeIdentifier": "394075284",
+            "scheme": "youkuhd://",
+            "platform": "pad",
+            "new": true
         },
         {
             "identifier": "hulu",

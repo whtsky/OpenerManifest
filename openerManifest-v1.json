@@ -2200,7 +2200,7 @@
         },
         {
             "title": "Open Listing",
-            "regex": "http(?:s)?://(?:\\w+\\.)?trulia\\.com/rental(?:-community/)?\\d+.*$",
+            "regex": "http(?:s)?://(?:\\w+\\.)?trulia\\.com/rental(?:-community)?/\\d+.*$",
             "testInputs": [
                 "http://m.trulia.com/rental/3068789021-5569-Norcross-Road-5569-Norcross-Rd-Columbus-OH-43229",
                 "http://www.trulia.com/rental-community/9000017768/Avalon-at-Mission-Bay-North-255-King-St-San-Francisco-CA-94107/"

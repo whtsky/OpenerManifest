@@ -2181,6 +2181,40 @@
                     ]
                 }
             ]
+        },
+        {
+            "title": "Open Listing",
+            "regex": "http(?:s)?://(?:\\w+\\.)?trulia\\.com/property/\\d+.*$",
+            "testInputs": [
+                "http://www.trulia.com/property/3209678735-67-Arago-St-San-Francisco-CA-94112"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "trulia",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(urlHash=.*?)\".*'); var match = regex.exec(res)[1]; completionHandler('truliapdpforsale://?' + match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "truliapdpforsale://?urlHash=aWQ9MzIwOTY3ODczNSZpZHQ9Rm9yK1NhbGUmc3Q9Q0EmY3k9U2FuK0ZyYW5jaXNjbw%3D%3D"
+                    ]
+                }
+            ]
+        },
+        {
+            "title": "Open Listing",
+            "regex": "http(?:s)?://(?:\\w+\\.)?trulia\\.com/rental(?:-community/)?\\d+.*$",
+            "testInputs": [
+                "http://m.trulia.com/rental/3068789021-5569-Norcross-Road-5569-Norcross-Rd-Columbus-OH-43229",
+                "http://www.trulia.com/rental-community/9000017768/Avalon-at-Mission-Bay-North-255-King-St-San-Francisco-CA-94107/"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "truliarent",
+                    "script": "function process(url, completionHandler) { var xmlhttp = new XMLHttpRequest(); xmlhttp.onreadystatechange = function() { if (xmlhttp.readyState == 4 && xmlhttp.status == 200) { var res = xmlhttp.responseText; var regex = RegExp('.*(urlHash=.*?)\".*'); var match = regex.exec(res)[1]; completionHandler('truliapdpforrent://?' + match); } }; xmlhttp.open('GET', url, true); xmlhttp.send(); }",
+                    "testResults": [
+                        "truliapdpforrent://?urlHash=aWQ9MzA2ODc4OTAyMSZpZHQ9Rm9yK1JlbnQmc3Q9T0gmY3k9Q29sdW1idXM%3D",
+                        "truliapdpforrent://?urlHash=aWQ9OTAwMDAxNzc2OCZpZHQ9Rm9yK1JlbnQmc3Q9Q0EmY3k9U2FuK0ZyYW5jaXNjbw%3D%3D"
+                    ]
+                }
+            ]
         }
     ],
     "apps": [
@@ -2651,6 +2685,20 @@
             "displayName": "Redfin",
             "storeIdentifier": "327962480",
             "scheme": "redfin://"
+        },
+        {
+            "identifier": "trulia",
+            "displayName": "Trulia",
+            "storeIdentifier": "288487321",
+            "scheme": "truliapdpforrent://",
+            "new": true
+        },
+        {
+            "identifier": "truliarent",
+            "displayName": "Trulia Rentals",
+            "storeIdentifier": "508163604",
+            "scheme": "truliapdpforrent://",
+            "new": true
         }
     ]
 }

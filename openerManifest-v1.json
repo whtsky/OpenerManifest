@@ -918,6 +918,22 @@
             ]
         },
         {
+            "title": "Open Dubsmash",
+            "regex": "http(?:s)?://api\\.dubsmash\\.com/goto/(\\w+).*$",
+            "testInputs": [
+                "https://api.dubsmash.com/goto/73a225"
+            ],
+            "formats": [
+                {
+                    "appIdentifier": "dubsmash",
+                    "format": "dubsmash://1/snip/$1",
+                    "testResults": [
+                        "dubsmash://1/snip/73a225"
+                    ]
+                }
+            ]
+        },
+        {
             "title": "Open Stream",
             "regex": "http(?:s?)://meerkatapp.co/[a-zA-Z0-9_-]+/((\\w+-)+\\w+).*$",
             "testInputs": [
@@ -2388,6 +2404,13 @@
             "displayName": "Flipagram",
             "storeIdentifier": "512727332",
             "scheme": "flipagram://"
+        },
+        {
+            "identifier": "dubsmash",
+            "displayName": "Dubsmash",
+            "storeIdentifier": "918820076",
+            "scheme": "dubsmash://",
+            "new": true
         },
         {
             "identifier": "meerkat",
